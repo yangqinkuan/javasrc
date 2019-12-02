@@ -83,6 +83,13 @@ public abstract class AbstractExecutorService implements ExecutorService {
      * the underlying task
      * @since 1.6
      */
+    /**
+     * 返回给定可调用任务的 RunnableFuture 。
+     * @param runnable
+     * @param value
+     * @param <T>
+     * @return
+     */
     protected <T> RunnableFuture<T> newTaskFor(Runnable runnable, T value) {
         return new FutureTask<T>(runnable, value);
     }
@@ -256,6 +263,15 @@ public abstract class AbstractExecutorService implements ExecutorService {
         }
     }
 
+    /**
+     * 执行给定的任务，返回在所有完成或超时到期时持有其状态和结果的期货列表，以先发生者为准。
+     * @param tasks
+     * @param timeout
+     * @param unit
+     * @param <T>
+     * @return
+     * @throws InterruptedException
+     */
     public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks,
                                          long timeout, TimeUnit unit)
         throws InterruptedException {

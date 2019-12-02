@@ -47,6 +47,7 @@ import java.nio.channels.*;
  * @since 1.4
  */
 
+// 可选通道的基本实现类
 public abstract class AbstractSelectableChannel
     extends SelectableChannel
 {
@@ -188,6 +189,8 @@ public abstract class AbstractSelectableChannel
      *
      * @throws  IllegalArgumentException {@inheritDoc}
      */
+
+    // 将此通道注册到选择器上，返回一个键
     public final SelectionKey register(Selector sel, int ops,
                                        Object att)
         throws ClosedChannelException
@@ -230,6 +233,7 @@ public abstract class AbstractSelectableChannel
      * order to perform the actual work of closing this channel.  It then
      * cancels all of this channel's keys.  </p>
      */
+    // 关闭该通道
     protected final void implCloseChannel() throws IOException {
         implCloseSelectableChannel();
         synchronized (keyLock) {

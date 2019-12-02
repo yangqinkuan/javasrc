@@ -88,7 +88,7 @@ import java.nio.channels.spi.SelectorProvider;
  * @see SelectionKey
  * @see Selector
  */
-
+// 可通过Selector复用的通道
 public abstract class SelectableChannel
     extends AbstractInterruptibleChannel
     implements Channel
@@ -115,6 +115,7 @@ public abstract class SelectableChannel
      *
      * @return  The valid-operation set
      */
+    //返回一个 operation set标识该通道支持的操作。
     public abstract int validOps();
 
     // Internal state:
@@ -134,6 +135,7 @@ public abstract class SelectableChannel
      *
      * @return <tt>true</tt> if, and only if, this channel is registered
      */
+    // 返回这个频道是否被注册
     public abstract boolean isRegistered();
     //
     // sync(keySet) { return isRegistered; }
@@ -149,6 +151,7 @@ public abstract class SelectableChannel
      *          given selector, or <tt>null</tt> if this channel is not
      *          currently registered with that selector
      */
+    // 检索表示频道注册的键与给定的选择器。
     public abstract SelectionKey keyFor(Selector sel);
     //
     // sync(keySet) { return findKey(sel); }
@@ -216,6 +219,7 @@ public abstract class SelectableChannel
      * @return  A key representing the registration of this channel with
      *          the given selector
      */
+    // 使用给定的选择器注册此频道，返回一个选择键
     public abstract SelectionKey register(Selector sel, int ops, Object att)
         throws ClosedChannelException;
     //
@@ -274,6 +278,8 @@ public abstract class SelectableChannel
      * @return  A key representing the registration of this channel with
      *          the given selector
      */
+
+    // 使用给定的选择器注册此频道，返回一个选择键。
     public final SelectionKey register(Selector sel, int ops)
         throws ClosedChannelException
     {
@@ -312,6 +318,7 @@ public abstract class SelectableChannel
      * @throws IOException
      *         If an I/O error occurs
      */
+    // 调整此频道的阻塞模式
     public abstract SelectableChannel configureBlocking(boolean block)
         throws IOException;
     //
@@ -339,6 +346,7 @@ public abstract class SelectableChannel
      *
      * @return  The blocking-mode lock object
      */
+    // 检索 configureBlocking和 register方法同步的对象
     public abstract Object blockingLock();
 
 }

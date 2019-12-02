@@ -137,5 +137,9 @@ public interface Executor {
      * accepted for execution
      * @throws NullPointerException if command is null
      */
+    /**
+     * 执行提交的对象Runnable任务。 该界面提供了一种将任务提交从每个任务的运行机制分解的方式，包括线程使用，调度等的Executor
+     * @param command
+     */
     void execute(Runnable command);
 }

@@ -152,6 +152,7 @@ public abstract class AbstractInterruptibleChannel
      * shown <a href="#be">above</a>, in order to implement asynchronous
      * closing and interruption for this channel.  </p>
      */
+    // 标记无限期IO阻塞的开始
     protected final void begin() {
         if (interruptor == null) {
             interruptor = new Interruptible() {
@@ -192,6 +193,7 @@ public abstract class AbstractInterruptibleChannel
      * @throws  ClosedByInterruptException
      *          If the thread blocked in the I/O operation was interrupted
      */
+    // 标记无限期IO阻塞的结束
     protected final void end(boolean completed)
         throws AsynchronousCloseException
     {

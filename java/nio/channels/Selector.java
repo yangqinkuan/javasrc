@@ -223,6 +223,7 @@ public abstract class Selector implements Closeable {
      * @throws  IOException
      *          If an I/O error occurs
      */
+    // 开启一个选择器
     public static Selector open() throws IOException {
         return SelectorProvider.provider().openSelector();
     }
@@ -256,6 +257,7 @@ public abstract class Selector implements Closeable {
      * @throws  ClosedSelectorException
      *          If this selector is closed
      */
+    // 返回public keys
     public abstract Set<SelectionKey> keys();
 
     /**
@@ -272,6 +274,7 @@ public abstract class Selector implements Closeable {
      * @throws  ClosedSelectorException
      *          If this selector is closed
      */
+    // 返回publicSelectedKeys;
     public abstract Set<SelectionKey> selectedKeys();
 
     /**
@@ -293,6 +296,13 @@ public abstract class Selector implements Closeable {
      *
      * @throws  ClosedSelectorException
      *          If this selector is closed
+     */
+    /**
+     * 不会阻塞，不管什么通道就绪都立刻返回，此方法执行非阻塞的选择操作。如果自从前一次选择操作后，
+     *
+     * 没有通变成可选择的，则此方法直接返回零。
+     * @return
+     * @throws IOException
      */
     public abstract int selectNow() throws IOException;
 
@@ -326,6 +336,7 @@ public abstract class Selector implements Closeable {
      * @throws  IllegalArgumentException
      *          If the value of the timeout argument is negative
      */
+    // 除了最长会阻塞timeout毫秒(参数)
     public abstract int select(long timeout)
         throws IOException;
 
@@ -347,6 +358,7 @@ public abstract class Selector implements Closeable {
      * @throws  ClosedSelectorException
      *          If this selector is closed
      */
+    // 阻塞到至少有一个通道在你注册的事件上就绪了
     public abstract int select() throws IOException;
 
     /**
@@ -368,6 +380,7 @@ public abstract class Selector implements Closeable {
      *
      * @return  This selector
      */
+    // 如果有上一个select未返回，则立即返回
     public abstract Selector wakeup();
 
     /**
@@ -377,7 +390,7 @@ public abstract class Selector implements Closeable {
      * methods then it is interrupted as if by invoking the selector's {@link
      * #wakeup wakeup} method.
      *
-     * <p> Any uncancelled keys still associated with this selector are
+     * <pny uncancelled keys s> Atill associated with this selector are
      * invalidated, their channels are deregistered, and any other resources
      * associated with this selector are released.
      *
@@ -390,6 +403,11 @@ public abstract class Selector implements Closeable {
      *
      * @throws  IOException
      *          If an I/O error occurs
+     */
+    /**
+     * 用完Selector后调用其close()方法会关闭该Selector，且使注册到该Selector上的所有SelectionKey实例无效。
+     * 通道本身并不会关闭。
+     * @throws IOException
      */
     public abstract void close() throws IOException;
 

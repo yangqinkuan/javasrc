@@ -107,6 +107,13 @@ public interface ScheduledExecutorService extends ExecutorService {
      *         scheduled for execution
      * @throws NullPointerException if command is null
      */
+    /**
+     * 创建并执行在给定延迟后启用的单次操作。
+     * @param command
+     * @param delay
+     * @param unit
+     * @return
+     */
     public ScheduledFuture<?> schedule(Runnable command,
                                        long delay, TimeUnit unit);
 
@@ -122,6 +129,14 @@ public interface ScheduledExecutorService extends ExecutorService {
      * @throws RejectedExecutionException if the task cannot be
      *         scheduled for execution
      * @throws NullPointerException if callable is null
+     */
+    /**
+     * 创建并执行在给定延迟后启用的ScheduledFuture。
+     * @param callable
+     * @param delay
+     * @param unit
+     * @param <V>
+     * @return
      */
     public <V> ScheduledFuture<V> schedule(Callable<V> callable,
                                            long delay, TimeUnit unit);
@@ -151,6 +166,16 @@ public interface ScheduledExecutorService extends ExecutorService {
      * @throws NullPointerException if command is null
      * @throws IllegalArgumentException if period less than or equal to zero
      */
+    /**
+     *  创建并执行在给定的初始延迟之后，随后以给定的时间段首先启用的周期性动作;
+     *  那就是执行将在initialDelay之后开始，然后是initialDelay+period ，
+     *  然后是initialDelay + 2 * period ，等等。
+     * @param command
+     * @param initialDelay
+     * @param period
+     * @param unit
+     * @return
+     */
     public ScheduledFuture<?> scheduleAtFixedRate(Runnable command,
                                                   long initialDelay,
                                                   long period,
@@ -177,6 +202,15 @@ public interface ScheduledExecutorService extends ExecutorService {
      *         scheduled for execution
      * @throws NullPointerException if command is null
      * @throws IllegalArgumentException if delay less than or equal to zero
+     */
+    /**
+     * 创建并执行在给定的初始延迟之后首先启用的定期动作，
+     * 随后在一个执行的终止和下一个执行的开始之间给定的延迟。
+     * @param command
+     * @param initialDelay
+     * @param delay
+     * @param unit
+     * @return
      */
     public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command,
                                                      long initialDelay,

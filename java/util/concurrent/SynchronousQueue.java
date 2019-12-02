@@ -179,10 +179,19 @@ public class SynchronousQueue<E> extends AbstractQueue<E>
          *         the caller can distinguish which of these occurred
          *         by checking Thread.interrupted.
          */
+        /**
+         * 执行put和take方法
+         * @param e 非空时，表示这个元素要传递给消费者(提供者-put)
+         *          为空时，则表示当前操作要求请求一个消费数据(消费者-take)
+         * @param timed
+         * @param nanos
+         * @return
+         */
         abstract E transfer(E e, boolean timed, long nanos);
     }
 
     /** The number of CPUs, for spin control */
+    // 逻辑CPU的个数
     static final int NCPUS = Runtime.getRuntime().availableProcessors();
 
     /**
@@ -192,6 +201,7 @@ public class SynchronousQueue<E> extends AbstractQueue<E>
      * seems not to vary with number of CPUs (beyond 2) so is just
      * a constant.
      */
+    // 自旋次数，如果没有指定时间设置，则使用maxUntimedSpins。如果NCPUS数量大于等于2则设定为为32*16，否则为0；
     static final int maxTimedSpins = (NCPUS < 2) ? 0 : 32;
 
     /**
@@ -199,12 +209,14 @@ public class SynchronousQueue<E> extends AbstractQueue<E>
      * This is greater than timed value because untimed waits spin
      * faster since they don't need to check times on each spin.
      */
+    // 自旋次数，如果没有指定时间设置，则使用maxUntimedSpins。如果NCPUS数量大于等于2则设定为为32*16，否则为0；
     static final int maxUntimedSpins = maxTimedSpins * 16;
 
     /**
      * The number of nanoseconds for which it is faster to spin
      * rather than to use timed park. A rough estimate suffices.
      */
+    // 为了防止自定义的时间限过长，而设置的，如果设置的时间限长于这个值则取这个spinForTimeoutThreshold 为时间限。这是为了优化而考虑的。这个的单位为纳秒
     static final long spinForTimeoutThreshold = 1000L;
 
     /** Dual stack */
@@ -231,8 +243,11 @@ public class SynchronousQueue<E> extends AbstractQueue<E>
         /** Node class for TransferStacks. */
         static final class SNode {
             volatile SNode next;        // next node in stack
+            //
             volatile SNode match;       // the node matched to this
+            // 等待的线程
             volatile Thread waiter;     // to control park/unpark
+            // 元素信息
             Object item;                // data; or null for REQUESTs
             int mode;
             // Note: item and mode fields don't need to be volatile
@@ -242,7 +257,7 @@ public class SynchronousQueue<E> extends AbstractQueue<E>
             SNode(Object item) {
                 this.item = item;
             }
-
+            // 替换当前节点的next节点
             boolean casNext(SNode cmp, SNode val) {
                 return cmp == next &&
                     UNSAFE.compareAndSwapObject(this, nextOffset, cmp, val);
@@ -255,6 +270,11 @@ public class SynchronousQueue<E> extends AbstractQueue<E>
              *
              * @param s the node to match
              * @return true if successfully matched to s
+             */
+            /**
+             * 把node绑定到this.node,如果成功了，则唤醒线程
+             * @param s
+             * @return
              */
             boolean tryMatch(SNode s) {
                 if (match == null &&
@@ -271,6 +291,9 @@ public class SynchronousQueue<E> extends AbstractQueue<E>
 
             /**
              * Tries to cancel a wait by matching node to itself.
+             */
+            /**
+             * 通过绑定自己尝试推出等待
              */
             void tryCancel() {
                 UNSAFE.compareAndSwapObject(this, matchOffset, null, this);
@@ -1107,6 +1130,7 @@ public class SynchronousQueue<E> extends AbstractQueue<E>
      * @throws NullPointerException          {@inheritDoc}
      * @throws IllegalArgumentException      {@inheritDoc}
      */
+    // 从该队列中删除所有可用的元素，并将它们添加到给定的集合中。
     public int drainTo(Collection<? super E> c) {
         if (c == null)
             throw new NullPointerException();
